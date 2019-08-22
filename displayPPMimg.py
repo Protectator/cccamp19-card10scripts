@@ -10,7 +10,6 @@ Author: Kewin Dousse (Protectator)
 """
 import color
 import display
-import ledfx
 
 FILENAME = 'data.ppm'
 
@@ -22,13 +21,23 @@ def bytes_to_int(bytes):
 
 def main():
     image_file = open(FILENAME, "rb")
-    magic = image_file.read(8)
-    width = image_file.read(2)
-    height = image_file.read(2)
-    max_value = image_file.read(2)
+    magic = image_file.readline()
     with display.open() as disp:
-        for y in range(80):
-            for x in range(160):
+        if magic.decode('utf-8')[:2] != "P6":
+            disp.print('Incorrect', fg=color.WHITE, bg=color.RED)
+            disp.print('image', fg=color.WHITE, bg=color.RED, posy=20)
+            disp.print('format', fg=color.WHITE, bg=color.RED, posy=40)
+        dimensions = image_file.readline()
+        dimensions_array = dimensions.decode('utf-8').split(" ")
+        width = dimensions_array[0]
+        height = dimensions_array[1]
+        max_value = image_file.readline()
+        disp.print('Loading img', fg=color.WHITE, bg=color.BLACK)
+        disp.print(width, fg=color.WHITE, bg=color.BLACK, posy=20)
+        disp.print(height, fg=color.WHITE, bg=color.BLACK, posy=40)
+        disp.update()
+        for y in range(int(height)):
+            for x in range(int(width)):
                 r_string = bytes_to_int(image_file.read(1))
                 g_string = bytes_to_int(image_file.read(1))
                 b_string = bytes_to_int(image_file.read(1))
