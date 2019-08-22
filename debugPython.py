@@ -4,6 +4,8 @@ Debug Script
 This is a custom version of the menu.py version.
 It is only able to run Python scripts, but it shows the
 exception if the script raises an exception.
+
+Based on the CCCauliflower version of the menu
 """
 import buttons
 import color
